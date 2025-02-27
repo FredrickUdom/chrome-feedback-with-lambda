@@ -8,7 +8,7 @@ jobs:
   deploy:
     name: deploy
 
-    runs: ubuntu-latest
+    runs-on: ubuntu-latest  # Corrected from `runs` to `runs-on`
 
     steps:
     - uses: actions/checkout@v2
@@ -16,7 +16,7 @@ jobs:
     - uses: actions/cache@v2
       with:
         path: '**/node_modules'
-        key: ${{runner.os}}-modules-${{ hashFiles('**/package.lock')}}
+        key: ${{runner.os}}-modules-${{ hashFiles('**/package-lock.json')}}  # Fixed typo in `package-lock.json`
 
     - name: Use Node.js 20.x
       uses: actions/setup-node@v1
