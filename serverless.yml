@@ -1,4 +1,4 @@
-service: chrome-feedback-cloud-function-api
+service: chrome-feedback-with-lambda
 
 provider:
   name: aws
