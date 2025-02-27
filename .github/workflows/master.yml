@@ -8,18 +8,18 @@ jobs:
   deploy:
     name: deploy
 
-    runs-on: ubuntu-latest  # Corrected from `runs` to `runs-on`
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3  # Updated to v3
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3  # Updated from v2 to v3
       with:
         path: '**/node_modules'
-        key: ${{runner.os}}-modules-${{ hashFiles('**/package-lock.json')}}  # Fixed typo in `package-lock.json`
+        key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
 
     - name: Use Node.js 20.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3  # Updated to v3
       with:
         node-version: 20.x
         
@@ -27,9 +27,9 @@ jobs:
       run: npm install
 
     - name: serverless deploy
-      uses: serverless/github-action@master
+      uses: serverless/github-action@v3  # Updated to v3
       with:
         args: deploy
       env:
-        AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-        AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
