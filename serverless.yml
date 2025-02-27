@@ -1,0 +1,103 @@
+service: chrome-feedback-cloud-function-api
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: dev
+  region: eu-north-1
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.postsTableName}
+
+custom:
+  postsTableName: posts-table-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+
+functions:
+  getPost:
+    handler: api.getPost
+    name: get-post
+    memorysize: 128
+    timeout: 5
+    events:
+      - http:
+          path: post/{postId}
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynomodb:GetItem"
+        Resource: !GetAtt PostsTable.Arn
+  createPost:
+    handler: api.createPost
+    name: create-post
+    memorysize: 128
+    timeout: 5
+    events:
+      - http:
+          path: post
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynomodb:PutItem"
+        Resource: !GetAtt PostsTable.Arn
+  updatePost:
+    handler: api.updatePost
+    name: update-post
+    memorysize: 128
+    timeout: 5
+    events:
+      - http:
+          path: post/{postId}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynomodb:UpdateItem"
+        Resource: !GetAtt PostsTable.Arn
+  deletePost:
+    handler: api.deletePost
+    name: delete-post
+    memorysize: 128
+    timeout: 5
+    events:
+      - http:
+          path: post/{postId}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynomodb:DeleteItem"
+        Resource: !GetAtt PostsTable.Arn
+  getAllPosts:
+    handler: api.getAllPosts
+    name: get-all-posts
+    memorysize: 128
+    timeout: 5
+    events:
+      - http:
+          path: posts
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynomodb:Scan"
+        Resource: !GetAtt PostsTable.Arn
+
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.postsTableName}
+        AttributeDefinitions:
+          - AttributeName: postId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: postId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
