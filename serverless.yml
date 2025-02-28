@@ -13,78 +13,88 @@ custom:
 
 plugins:
   - serverless-iam-roles-per-function
+  - serverless-dotenv-plugin
 
 functions:
   getPost:
-    handler: api.getPost
+    handler: app.getPost
     name: get-post
-    memorysize: 128
-    timeout: 5
+    memorySize: 128 
+    timeout: 10
     events:
       - http:
-          path: post/{postId}
+          path: posts/{postId}
           method: GET
+          cors: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - "dynomodb:GetItem"
-        Resource: !GetAtt PostsTable.Arn
+          - "dynamodb:GetItem"
+        Resource: !GetAtt PostsTable.Arn 
+
   createPost:
-    handler: api.createPost
+    handler: app.createPost
     name: create-post
-    memorysize: 128
-    timeout: 5
+    memorySize: 128 
+    timeout: 10
     events:
       - http:
-          path: post
+          path: posts
           method: POST
+          cors: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - "dynomodb:PutItem"
-        Resource: !GetAtt PostsTable.Arn
+          - "dynamodb:PutItem"
+        Resource: !GetAtt PostsTable.Arn 
+
   updatePost:
-    handler: api.updatePost
+    handler: app.updatePost
     name: update-post
-    memorysize: 128
-    timeout: 5
+    memorySize: 128
+    timeout: 10
     events:
       - http:
-          path: post/{postId}
+          path: posts/{postId}
           method: PUT
+          cors: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - "dynomodb:UpdateItem"
-        Resource: !GetAtt PostsTable.Arn
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt PostsTable.Arn 
+
   deletePost:
-    handler: api.deletePost
+    handler: app.deletePost
     name: delete-post
-    memorysize: 128
-    timeout: 5
+    memorySize: 128
+    timeout: 10
     events:
       - http:
-          path: post/{postId}
+          path: posts/{postId}
           method: DELETE
+          cors: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - "dynomodb:DeleteItem"
-        Resource: !GetAtt PostsTable.Arn
+          - "dynamodb:DeleteItem"
+        Resource: !GetAtt PostsTable.Arn 
+
   getAllPosts:
-    handler: api.getAllPosts
+    handler: app.getAllPosts
     name: get-all-posts
-    memorysize: 128
-    timeout: 5
+    memorySize: 128 
+    timeout: 10
     events:
       - http:
           path: posts
           method: GET
+          cors: true
     iamRoleStatements:
       - Effect: "Allow"
         Action:
-          - "dynomodb:Scan"
-        Resource: !GetAtt PostsTable.Arn
+          - "dynamodb:Scan"
+        Resource: !GetAtt PostsTable.Arn 
 
 resources:
   Resources:
